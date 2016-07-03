@@ -1,0 +1,70 @@
+group 'works.nichols'
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath('org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE')
+    classpath('org.liquibase:liquibase-gradle-plugin:1.2.1')
+    classpath('org.yaml:snakeyaml:1.15')
+    classpath('org.postgresql:postgresql:9.4.1208')
+    classpath('se.transmode.gradle:gradle-docker:1.2')
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'docker'
+apply plugin: 'spring-boot'
+apply plugin: 'org.liquibase.gradle'
+apply plugin: 'jacoco'
+
+ext {
+  profile = project.hasProperty('profile') ? project.getProperty('profile') : 'dev'
+}
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  providedRuntime
+}
+
+dependencies {
+  compile('org.springframework.boot:spring-boot-starter-web')
+  compile('org.springframework.boot:spring-boot-starter-actuator')
+  compile('org.springframework.boot:spring-boot-starter-web')
+  compile('org.springframework.boot:spring-boot-starter-data-jpa')
+  compile('org.springframework:spring-jdbc')
+  compile('org.projectlombok:lombok:1.16.4')
+  compile('org.hibernate:hibernate-core:5.2.1.Final')
+  compile('org.hibernate:hibernate-java8:5.2.1.Final')
+  compile('org.postgresql:postgresql')
+
+  providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+}
+
+springBoot {
+  mainClass = 'works.nichols.media.Application'
+}
+
+bootRun {
+  jvmArgs = [ '-Dspring.profiles.active=' + profile ]
+}
+
+liquibase {
+  activities {
+    Properties springProps = new Properties()
+    springProps.load(new FileInputStream(file('src/main/resources/application-' + profile + '.properties')))
+
+    main {
+      driver springProps['spring.datasource.driver-class-name']
+      changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
+      url springProps['spring.datasource.url']
+      username springProps['spring.datasource.username']
+      password springProps['spring.datasource.password']
+    }
+  }
+}

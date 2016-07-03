@@ -3,3 +3,6 @@
 
 # Ignore intellij cache
 .idea
+
+# Ignore build folder
+build/
