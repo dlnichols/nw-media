@@ -1,0 +1,5 @@
+# Ignore gradle cache
+.gradle
+
+# Ignore intellij cache
+.idea
