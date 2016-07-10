@@ -1,0 +1,53 @@
+databaseChangeLog:
+- changeSet:
+    id: add-item-table-1
+    author: dan
+    changes:
+    - createTable:
+        tableName: item
+        columns:
+        - column:
+            name: id
+            type: UUID
+            defaultValueComputed: (gen_random_uuid())
+            constraints:
+                nullable: false
+                unique: true
+                primaryKey: true
+                primaryKeyName: item_pkey
+        - column:
+            name: name
+            type: TEXT
+            constraints:
+                nullable: false
+        - column:
+            name: description
+            type: TEXT
+        - column:
+            name: created_by
+            type: UUID
+            constraints:
+                nullable: false
+                references: media_user(id)
+                foreignKeyName: item_created_by_fkey
+        - column:
+            name: created_date
+            type: TIMESTAMP WITH TIME ZONE
+            defaultValueComputed: (now() at time zone 'utc')
+            constraints:
+                nullable: false
+        - column:
+            name: last_modified_by
+            type: UUID
+            constraints:
+                nullable: false
+                references: media_user(id)
+                foreignKeyName: item_modified_by_fkey
+        - column:
+            name: last_modified_date
+            type: TIMESTAMP WITH TIME ZONE
+            defaultValueComputed: (now() at time zone 'utc')
+            constraints:
+                nullable: false
+    - sql:
+        sql: CREATE TRIGGER update_item_last_modified_date BEFORE UPDATE ON item FOR EACH ROW EXECUTE PROCEDURE util.update_last_modified_date();
