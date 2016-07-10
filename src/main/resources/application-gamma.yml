@@ -1,0 +1,11 @@
+logging:
+    level:
+        root: ERROR
+
+spring:
+    datasource:
+        url: jdbc:postgresql://media-db.nichols.works:5432/nw-media
+        username: nw-media
+        password: ShamefulMermaidBrassiere42D
+        platform: gamma
+        driver-class-name: org.postgresql.Driver

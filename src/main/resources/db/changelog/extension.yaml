@@ -1,0 +1,17 @@
+databaseChangeLog:
+- changeSet:
+    id: add-extension-1
+    author: dan
+    changes:
+    - sql:
+        sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+    - sql:
+        sql: CREATE EXTENSION IF NOT EXISTS citext;
+    - sql:
+        sql: DROP SCHEMA IF EXISTS util CASCADE;
+    - sql:
+        sql: CREATE SCHEMA IF NOT EXISTS util;
+    - sqlFile:
+        path: util/update_last_modified_date.sql
+        relativeToChangelogFile: true
+        splitStatements: false

@@ -1,0 +1,16 @@
+logging:
+    level:
+        root: WARN
+
+server:
+    port: 8000
+
+spring:
+    jpa:
+        show-sql: true
+    datasource:
+        url: jdbc:postgresql://localhost:5432/nw-media
+        username: dev
+        password:
+        platform: dev
+        driver-class-name: org.postgresql.Driver
